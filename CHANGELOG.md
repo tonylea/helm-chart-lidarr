@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0](https://github.com/tonylea/helm-chart-lidarr/compare/v1.0.0...v2.0.0) (2026-11-21)
+
+### ⚠ BREAKING CHANGES
+
+* postgres.database is now postgres.databases.main,
+  and Lidarr needs a log database, postgres.databases.log.
+
+### Features
+
+* keep Lidarr's log in its own Postgres database ([9dbe1bd](https://github.com/tonylea/helm-chart-lidarr/commit/9dbe1bd581791f858e684791d0c67e8694feac33))
+
+### Bug Fixes
+
+* leave resource requests to whoever deploys the chart ([1178d3e](https://github.com/tonylea/helm-chart-lidarr/commit/1178d3e93338c5d6ba7c1e035af692a742adb4b7))
+
+### Documentation
+
+* keep only the comments that record a decision ([dc54552](https://github.com/tonylea/helm-chart-lidarr/commit/dc545521c957fbd44138337a5b010365145b543c))
+* keep the README to the fixed settings and what the chart needs ([7543621](https://github.com/tonylea/helm-chart-lidarr/commit/7543621614e74df84ed656f0a24d9af496990394))
+
 ## 1.0.0 (2026-11-21)
 
 ### Features
