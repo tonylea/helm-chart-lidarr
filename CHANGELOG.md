@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.0.1](https://github.com/tonylea/helm-chart-lidarr/compare/v3.0.0...v3.0.1) (2026-11-21)
+
+### Bug Fixes
+
+* let Lidarr's first-run screen set the login ([5e85aaf](https://github.com/tonylea/helm-chart-lidarr/commit/5e85aafb620b8ba6ee9449163656047f46781708))
+
+### Documentation
+
+* say the kind test is a fresh install ([3a71e21](https://github.com/tonylea/helm-chart-lidarr/commit/3a71e21d8ef30e107c4b0065aba61308725644ff))
+
 ## [3.0.0](https://github.com/tonylea/helm-chart-lidarr/compare/v2.0.0...v3.0.0) (2026-11-21)
 
 ### ⚠ BREAKING CHANGES

@@ -1,6 +1,6 @@
 {
   "name": "helm-chart-lidarr",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Deploys Lidarr, which finds, downloads and organises music",
   "private": true,
   "repository": {
