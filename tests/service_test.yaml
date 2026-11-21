@@ -1,0 +1,19 @@
+suite: Service
+release:
+  name: lidarr
+templates:
+  - templates/service.yaml
+tests:
+  - it: exposes Lidarr's port to the pod's selector labels
+    asserts:
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/name: lidarr
+            app.kubernetes.io/instance: lidarr
+      - equal:
+          path: spec.ports
+          value:
+            - name: http
+              port: 8686
+              targetPort: http
