@@ -24,10 +24,7 @@ postgres:
       name: ""
       key: password
 
-resources:
-  requests:
-    cpu: 100m
-    memory: 512Mi
+resources: {}
 
 persistence:
   config:
