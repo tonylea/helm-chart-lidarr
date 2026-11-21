@@ -45,8 +45,8 @@ spec:
             - name: LIDARR__AUTH__APIKEY
               valueFrom:
                 {{- include "lidarr.secretKeyRef" (list "apiKey" .Values.apiKey) | nindent 16 }}
-            - name: LIDARR__AUTH__METHOD
-              value: Forms
+            # No AUTH__METHOD: setting it skips the first-run screen that creates the user,
+            # and Lidarr has no setting for the user, so the login could never be passed.
             # Behind a gateway or ingress every request comes from a private address,
             # so DisabledForLocalAddresses would turn the login off for everyone.
             - name: LIDARR__AUTH__REQUIRED

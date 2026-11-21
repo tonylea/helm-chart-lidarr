@@ -74,8 +74,6 @@ tests:
                 secretKeyRef:
                   name: lidarr-api-key
                   key: api-key
-            - name: LIDARR__AUTH__METHOD
-              value: Forms
             - name: LIDARR__AUTH__REQUIRED
               value: Enabled
             - name: LIDARR__POSTGRES__HOST
