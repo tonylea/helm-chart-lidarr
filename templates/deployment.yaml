@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "lidarr.labels" . | nindent 4 }}
+spec:
+  # Two copies of Lidarr can't share one database, so the old pod stops before the new one starts.
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "lidarr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lidarr.podLabels" . | nindent 8 }}
+    spec:
+      enableServiceLinks: false
+      automountServiceAccountToken: false
+      # No runAsUser: the image starts as root to chown /config, then drops to PUID and PGID.
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: lidarr
+          image: "lscr.io/linuxserver/lidarr:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          env:
+            - name: PUID
+              value: {{ .Values.puid | quote }}
+            - name: PGID
+              value: {{ .Values.pgid | quote }}
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: LIDARR__AUTH__APIKEY
+              valueFrom:
+                {{- include "lidarr.secretKeyRef" (list "apiKey" .Values.apiKey) | nindent 16 }}
+            - name: LIDARR__AUTH__METHOD
+              value: Forms
+            # Behind a gateway or ingress every request comes from a private address,
+            # so DisabledForLocalAddresses would turn the login off for everyone.
+            - name: LIDARR__AUTH__REQUIRED
+              value: Enabled
+            - name: LIDARR__POSTGRES__HOST
+              value: {{ required "postgres.host is required" .Values.postgres.host | quote }}
+            - name: LIDARR__POSTGRES__PORT
+              value: {{ .Values.postgres.port | quote }}
+            - name: LIDARR__POSTGRES__MAINDB
+              value: {{ .Values.postgres.database | quote }}
+            - name: LIDARR__POSTGRES__USER
+              valueFrom:
+                {{- include "lidarr.secretKeyRef" (list "postgres.username" .Values.postgres.username) | nindent 16 }}
+            - name: LIDARR__POSTGRES__PASSWORD
+              valueFrom:
+                {{- include "lidarr.secretKeyRef" (list "postgres.password" .Values.postgres.password) | nindent 16 }}
+            # Log lines already go to stdout; a log database would only duplicate them.
+            - name: LIDARR__LOG__DBENABLED
+              value: "false"
+          ports:
+            - name: http
+              containerPort: 8686
+          # The first start creates Lidarr's schema in Postgres, so start-up gets 5 minutes.
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ include "lidarr.claimName" (list . "config") }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "lidarr.claimName" (list . "data") }}
