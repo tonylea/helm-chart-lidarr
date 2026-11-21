@@ -1,5 +1,7 @@
 # Lidarr Helm Chart
 
+![Downloads](https://img.shields.io/github/downloads/tonylea/helm-chart-lidarr/total)
+
 Deploys [Lidarr](https://lidarr.audio/) from LinuxServer's image, [`lscr.io/linuxserver/lidarr`](https://github.com/linuxserver/docker-lidarr), the one Lidarr's docs recommend.
 
 The chart is opinionated: Lidarr keeps its data in Postgres, uses a fixed API key, and always asks for a login.
